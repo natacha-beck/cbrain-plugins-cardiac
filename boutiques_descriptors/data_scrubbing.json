@@ -1,0 +1,73 @@
+{
+    "name":           "data_scrubbing",
+    "tool-version":   "1.0.0",
+    "schema-version": "0.5",
+    "author":         "Youssef Megahed",
+    "description":    "Removes burned-in identifying information from images by cropping a fixed band at the top of each image. Accepts .tif, .tiff and .png; results are saved as .tif (default) or .png. The input folder is processed recursively.",
+    "command-line":   "python3 /cbrain_mnt/data_scrubbing.py [INPUT_DIR] [OUTPUT_DIR] [CROP_HEIGHT] [OUTPUT_FORMAT]",
+    "container-image": {
+        "type":  "singularity",
+        "image": "cardiac_base.sif"
+    },
+    "inputs": [
+        {
+            "id":          "input_dir",
+            "name":        "Input images folder",
+            "description": "A folder (FileCollection) containing .tif, .tiff or .png images, possibly in sub-folders",
+            "type":        "File",
+            "optional":    false,
+            "value-key":   "[INPUT_DIR]"
+        },
+        {
+            "id":            "output_dir",
+            "name":          "Output folder name",
+            "description":   "Name of the folder that will contain the scrubbed images",
+            "type":          "String",
+            "optional":      false,
+            "default-value": "scrubbed_tif_images",
+            "value-key":     "[OUTPUT_DIR]"
+        },
+        {
+            "id":                "crop_height",
+            "name":              "Crop height",
+            "description":       "Number of pixel rows removed at the top of each image",
+            "type":              "Number",
+            "integer":           true,
+            "minimum":           0,
+            "optional":          true,
+            "default-value":     68,
+            "command-line-flag": "--crop-height",
+            "value-key":         "[CROP_HEIGHT]"
+        },
+        {
+            "id":                "output_format",
+            "name":              "Output format",
+            "description":       "Format of the output images",
+            "type":              "String",
+            "value-choices":     [ "tif", "png" ],
+            "optional":          true,
+            "default-value":     "tif",
+            "command-line-flag": "--output-format",
+            "value-key":         "[OUTPUT_FORMAT]"
+        }
+    ],
+    "output-files": [
+        {
+            "id":            "scrubbed_dir",
+            "name":          "Scrubbed images",
+            "description":   "Folder of cropped .tif or .png images, same structure as the input",
+            "optional":      false,
+            "path-template": "[OUTPUT_DIR]"
+        }
+    ],
+    "custom": {
+        "cbrain:author": "Natacha Beck <nbeck@mcin.ca>",
+        "cbrain:plugins-container-bindmount": "/cbrain_mnt",
+        "cbrain:readonly-input-files": true,
+        "cbrain:integrator_modules": {
+            "BoutiquesFileTypeVerifier": {
+                "input_dir": [ "FileCollection" ]
+            }
+        }
+    }
+}

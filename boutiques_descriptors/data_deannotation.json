@@ -1,0 +1,50 @@
+{
+    "name":           "data_deannotation",
+    "tool-version":   "1.0.0",
+    "schema-version": "0.5",
+    "author":         "Youssef Megahed",
+    "description":    "Removes annotations (OCR-detected text, colored marks and small grayscale marks) from images by inpainting. The input folder is processed recursively and all results are saved as .tif.",
+    "command-line":   "python3 /container_mnt/data_deannotation.py [INPUT_DIR] [OUTPUT_DIR]",
+    "container-image": {
+        "image": "mcin/data_deannotation:1.0.0",
+        "type": "singularity"
+    },
+    "inputs": [
+        {
+            "id":          "input_dir",
+            "name":        "Input images folder",
+            "description": "A folder (FileCollection) containing images (.png, .jpg, .jpeg, .bmp, .tif, .tiff), possibly in sub-folders",
+            "type":        "File",
+            "optional":    false,
+            "value-key":   "[INPUT_DIR]"
+        },
+        {
+            "id":            "output_dir",
+            "name":          "Output folder name",
+            "description":   "Name of the folder that will contain the inpainted images",
+            "type":          "String",
+            "optional":      false,
+            "default-value": "inpainted_tif_images",
+            "value-key":     "[OUTPUT_DIR]"
+        }
+    ],
+    "output-files": [
+        {
+            "id":            "inpainted_dir",
+            "name":          "Inpainted images",
+            "description":   "Folder of de-annotated .tif images, same structure as the input",
+            "optional":      false,
+            "path-template": "[OUTPUT_DIR]"
+        }
+    ],
+    "custom": {
+        "cbrain:author": "Natacha Beck <nbeck@mcin.ca>",
+        "cbrain:plugins-container-bindmount": "/container_mnt",
+        "cbrain:readonly-input-files": true,
+        "cbrain:integrator_modules": {
+            "BoutiquesFileTypeVerifier": {
+                "input_dir": [ "FileCollection" ]
+            }
+        }
+    }
+}
