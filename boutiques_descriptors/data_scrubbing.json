@@ -4,7 +4,7 @@
     "schema-version": "0.5",
     "author":         "Youssef Megahed",
     "description":    "Removes burned-in identifying information from images by cropping a fixed band at the top of each image. Accepts .tif, .tiff and .png; results are saved as .tif (default) or .png. The input folder is processed recursively.",
-    "command-line":   "python3 /cbrain_mnt/data_scrubbing.py [INPUT_DIR] [OUTPUT_DIR] [CROP_HEIGHT] [OUTPUT_FORMAT]",
+    "command-line":   "data_scrubbing.py [INPUT_DIR] [OUTPUT_DIR] [CROP_HEIGHT] [OUTPUT_FORMAT]",
     "container-image": {
         "type":  "singularity",
         "image": "cardiac_base.sif"
@@ -44,9 +44,9 @@
             "name":              "Output format",
             "description":       "Format of the output images",
             "type":              "String",
-            "value-choices":     [ "tif", "png" ],
+            "value-choices":     [ "png", "tif" ],
             "optional":          true,
-            "default-value":     "tif",
+            "default-value":     "png",
             "command-line-flag": "--output-format",
             "value-key":         "[OUTPUT_FORMAT]"
         }
@@ -62,11 +62,14 @@
     ],
     "custom": {
         "cbrain:author": "Natacha Beck <nbeck@mcin.ca>",
-        "cbrain:plugins-container-bindmount": "/cbrain_mnt",
+        "cbrain:plugins-container-bindmount": "/wrapper",
         "cbrain:readonly-input-files": true,
         "cbrain:integrator_modules": {
             "BoutiquesFileTypeVerifier": {
                 "input_dir": [ "FileCollection" ]
+            },
+            "BoutiquesOutputFileTypeSetter": {
+                "scrubbed_dir": "DataScrubbingOutput"
             }
         }
     }
